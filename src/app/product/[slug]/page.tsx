@@ -4,6 +4,9 @@ import {
   getProductDetail,
   getProductSlugs,
 } from "@/features/storefront/server";
+
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   return (await getProductSlugs()).map((slug) => ({ slug }));
 }
