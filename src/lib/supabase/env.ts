@@ -7,4 +7,4 @@ function required(name: string) {
 }
 export const supabaseUrl = () => required("SUPABASE_URL");
 export const supabaseKey = () =>
-  required("SUPABASE_SERVICE_ROLE_KEY");
+  required("SUPABASE_PUBLISHABLE_KEY");
