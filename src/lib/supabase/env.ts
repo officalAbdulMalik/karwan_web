@@ -5,6 +5,6 @@ function required(name: string) {
   }
   return value;
 }
-export const supabaseUrl = () => required("NEXT_PUBLIC_SUPABASE_URL");
+export const supabaseUrl = () => required("SUPABASE_URL");
 export const supabaseKey = () =>
-  required("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
+  required("SUPABASE_SERVICE_ROLE_KEY");

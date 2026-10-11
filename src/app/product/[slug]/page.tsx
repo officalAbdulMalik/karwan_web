@@ -8,6 +8,15 @@ import {
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
+  // The deployment may not have Supabase build variables. With no params,
+  // Next.js serves this dynamic route on demand (dynamicParams is true).
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+  ) {
+    return [];
+  }
+
   return (await getProductSlugs()).map((slug) => ({ slug }));
 }
 export async function generateMetadata({

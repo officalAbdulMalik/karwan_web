@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { Archivo, Noto_Nastaliq_Urdu } from "next/font/google";
 import { CartProvider } from "@/features/storefront";
 import { getCartCatalog } from "@/features/storefront/server";
@@ -25,6 +26,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Supabase credentials may only be available at runtime on the host.
+  // Keep this request-time query out of the build prerender pass.
+  await connection();
+
   // The basket lives in the browser but needs titles, prices, stock and
   // colours from the catalogue, so they are handed to it from the server.
   const catalog = await getCartCatalog();
