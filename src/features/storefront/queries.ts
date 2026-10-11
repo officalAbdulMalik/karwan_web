@@ -197,13 +197,13 @@ export async function getProductDetail(
   if (!data) return null;
   return {
     product: toProduct(data),
-    specs: [...data.product_specs]
+    specs: [...(data.product_specs ?? [])]
       .sort((a, b) => a.position - b.position)
       .map((s) => ({ label: s.label, value: s.value })),
-    variants: [...data.product_variants]
+    variants: [...(data.product_variants ?? [])]
       .sort((a, b) => a.position - b.position)
       .map((v) => ({ colour: v.colour, available: v.is_available })),
-    reviews: [...data.reviews]
+    reviews: [...(data.reviews ?? [])]
       .sort((a, b) => b.created_at.localeCompare(a.created_at))
       .map((r) => ({
         id: r.id,

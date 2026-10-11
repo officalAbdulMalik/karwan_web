@@ -7,13 +7,6 @@ import {
 
 const getCachedProductDetail = cache(getProductDetail);
 
-export const dynamicParams = true;
-
-export function generateStaticParams() {
-  // Product records come from Supabase at request time. Avoid coupling the
-  // build to production database availability or build-time credentials.
-  return [];
-}
 export async function generateMetadata({
   params,
 }: {
