@@ -1,23 +1,18 @@
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import {
   ProductPage,
   getProductDetail,
-  getProductSlugs,
 } from "@/features/storefront/server";
+
+const getCachedProductDetail = cache(getProductDetail);
 
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  // The deployment may not have Supabase build variables. With no params,
-  // Next.js serves this dynamic route on demand (dynamicParams is true).
-  if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-  ) {
-    return [];
-  }
-
-  return (await getProductSlugs()).map((slug) => ({ slug }));
+export function generateStaticParams() {
+  // Product records come from Supabase at request time. Avoid coupling the
+  // build to production database availability or build-time credentials.
+  return [];
 }
 export async function generateMetadata({
   params,
@@ -25,7 +20,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const detail = await getProductDetail(slug);
+  const detail = await getCachedProductDetail(slug);
   return { title: `${detail?.product.title ?? "Product not found"} | Karvaan` };
 }
 export default async function Page({
@@ -34,6 +29,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  if (!(await getProductDetail(slug))) notFound();
-  return <ProductPage slug={slug} />;
+  const detail = await getCachedProductDetail(slug);
+  if (!detail) notFound();
+  return <ProductPage detail={detail} />;
 }

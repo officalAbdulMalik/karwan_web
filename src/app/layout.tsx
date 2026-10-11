@@ -34,7 +34,11 @@ export default async function RootLayout({
   // colours from the catalogue, so they are handed to it from the server.
   const catalog = await getCartCatalog();
   return (
-    <html lang="en" className={`${archivo.variable} ${urdu.variable}`}>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={`${archivo.variable} ${urdu.variable}`}
+    >
       <body>
         <CartProvider catalog={catalog}>
           <div className="site-shell">

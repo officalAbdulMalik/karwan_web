@@ -3,13 +3,13 @@ import {
   getCategories,
   getDepartments,
   getHomePage,
-  getProductDetail,
   getRelatedProducts,
   searchProducts,
 } from "../queries";
 import { starRow } from "../format";
 import { ProductCard, ProductPhoto } from "./product-card";
 import { ProductControls } from "./product-controls";
+import type { Product, ProductDetail } from "../types";
 export function Breadcrumb({
   department,
   current,
@@ -256,11 +256,18 @@ export async function CategoryPage({
     </>
   );
 }
-export async function ProductPage({ slug }: { slug: string }) {
-  const detail = await getProductDetail(slug);
-  if (!detail) return null;
+export async function ProductPage({
+  detail,
+}: {
+  detail: ProductDetail;
+}) {
   const { product, specs, variants, reviews } = detail;
-  const related = await getRelatedProducts(product);
+  let related: Product[] = [];
+  try {
+    related = await getRelatedProducts(product);
+  } catch (error) {
+    console.error("Failed to load related products", error);
+  }
   return (
     <>
       <Breadcrumb department={product.dept} current={product.title} />
